@@ -15,24 +15,37 @@ class Game:
         return block
     def move_left(self):
         self.curent_block.move(0,-1)
-        if self.block_inside()==False:
+        if self.block_inside()==False or self.block_fits()==False:
             self.curent_block.move(0,1)
     def move_right(self):
         self.curent_block.move(0,1)
-        if self.block_inside()==False:
+        if self.block_inside()==False or self.block_fits()==False:
             self.curent_block.move(0,-1)
     def move_down(self):
         self.curent_block.move(1,0)
-        if self.block_inside()==False:
+        if self.block_inside()==False or self.block_fits()==False:
             self.curent_block.move(-1,0)
+            self.lock_block()
+    def lock_block(self):
+        tiles=self.curent_block.get_cell_position()
+        for position in tiles:
+            self.grid.grid[position.row][position.column] =self.curent_block.id
+        self.curent_block=self.next_block
+        self.next_block=self.get_random_block()
     def rotate(self):
         self.curent_block.rotate()
-        if self.block_inside()==False:
+        if self.block_inside()==False or self.block_fits()==False:
             self.curent_block.undo_rotation()
     def block_inside(self):
         tiles=self.curent_block.get_cell_position()
         for tile in tiles:
             if self.grid.is_inside(tile.row , tile.column) == False:
+                return False
+        return True
+    def block_fits(self):
+        tiles=self.curent_block.get_cell_position()
+        for tile in tiles:
+            if self.grid.is_empty(tile.row,tile.column)==False:
                 return False
         return True
     def draw(self,screen):
