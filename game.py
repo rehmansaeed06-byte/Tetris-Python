@@ -72,4 +72,5 @@ class Game:
         return True
     def draw(self,screen):
         self.grid.draw(screen)
-        self.curent_block.draw(screen)
+        self.curent_block.draw(screen,11,11)
+        self.next_block.draw(screen,270,270)
