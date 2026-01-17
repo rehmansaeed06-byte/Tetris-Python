@@ -8,6 +8,16 @@ class Game:
         self.curent_block=self.get_random_block()
         self.next_block=self.get_random_block()
         self.game_over=False
+        self.score=0
+    def update_scores(self,lines_cleared,move_down_points):
+        if lines_cleared==1:
+            self.score+=100
+        elif lines_cleared==2:
+            self.score+=300
+        elif lines_cleared==3:
+            self.score+=500
+        self.score+=move_down_points
+
     def get_random_block(self):
         if len(self.blocks)==0:
             self.blocks =[IBlock(),JBlock(),LBlock(),OBlock(),SBlock(),TBlock(),ZBlock()]
@@ -33,7 +43,8 @@ class Game:
             self.grid.grid[position.row][position.column] =self.curent_block.id
         self.curent_block=self.next_block
         self.next_block=self.get_random_block()
-        self.grid.clear_full_row()
+        row_cleared=self.grid.clear_full_row()
+        self.update_scores(row_cleared,0)
         if self.block_fits()==False:
             self.game_over=True
     def reset(self):
@@ -41,6 +52,7 @@ class Game:
         self.blocks =[IBlock(),JBlock(),LBlock(),OBlock(),SBlock(),TBlock(),ZBlock()]
         self.curent_block=self.get_random_block()
         self.next_block=self.get_random_block()
+        self.score=0
 
     def rotate(self):
         self.curent_block.rotate()
