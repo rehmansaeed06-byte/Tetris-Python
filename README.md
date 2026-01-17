@@ -99,7 +99,6 @@ Tetris-Python/
 
 ## 🔮 Possible Improvements
 
-* Add sound effects and music
 * Improve UI and animations
 * High-score persistence
 * Difficulty levels
