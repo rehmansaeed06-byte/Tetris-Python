@@ -1,6 +1,7 @@
 from grid import Grid
 from blocks import *
 import random
+import pygame
 class Game:
     def __init__(self):
         self.grid=Grid()
@@ -9,6 +10,10 @@ class Game:
         self.next_block=self.get_random_block()
         self.game_over=False
         self.score=0
+        self.rotate_sound=pygame.mixer.Sound("Sound/rotate.ogg")
+        self.clear_sound=pygame.mixer.Sound("Sound/clear.ogg")
+        pygame.mixer.music.load("Sound/music.ogg")
+        pygame.mixer.music.play(-1)
     def update_scores(self,lines_cleared,move_down_points):
         if lines_cleared==1:
             self.score+=100
@@ -44,7 +49,9 @@ class Game:
         self.curent_block=self.next_block
         self.next_block=self.get_random_block()
         row_cleared=self.grid.clear_full_row()
-        self.update_scores(row_cleared,0)
+        if row_cleared > 0:
+            self.clear_sound.play()
+            self.update_scores(row_cleared,0)
         if self.block_fits()==False:
             self.game_over=True
     def reset(self):
@@ -58,6 +65,8 @@ class Game:
         self.curent_block.rotate()
         if self.block_inside()==False or self.block_fits()==False:
             self.curent_block.undo_rotation()
+        else:
+            self.rotate_sound.play()
     def block_inside(self):
         tiles=self.curent_block.get_cell_position()
         for tile in tiles:
@@ -73,4 +82,9 @@ class Game:
     def draw(self,screen):
         self.grid.draw(screen)
         self.curent_block.draw(screen,11,11)
-        self.next_block.draw(screen,270,270)
+        if self.next_block.id==3:
+            self.next_block.draw(screen,255,290)
+        elif self.next_block.id==4:
+            self.next_block.draw(screen,255,280)
+        else:
+            self.next_block.draw(screen,270,270)
